@@ -7,7 +7,6 @@ import Upload from './Components/Upload';
 function App() {
   return (<>
     <Main/>
-    <ImageUploader/>
     </>
   );
 }

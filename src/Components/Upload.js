@@ -27,12 +27,28 @@ const ImageUploader = () => {
 
   const handleCropClick = () => {
     const canvas = editor.getImageScaledToCanvas().toDataURL();
-    // Do something with the cropped image
+  
+      // Create a new FormData object
+      const formData = new FormData();
+  
+      // Append the file to the FormData object
+      formData.append('file', canvas);
+  
+      // Send the fetch request
+      fetch('/predict', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        setFeatures(data.features);
+      })
+      .catch(error => console.error(error));
   };
 
   return (
     <div>
-      <input type="file" onChange={handleImageChange} />
+      <input className="choose" type="file" onChange={handleImageChange} />
       {image && (
         <AvatarEditor
           ref={(ref) => setEditor(ref)}
@@ -51,14 +67,14 @@ const ImageUploader = () => {
         <input
           type="range"
           min="1"
-          max="2"
+          max="4"
           step="0.01"
           value={scale}
           onChange={handleScaleChange}
         />
       </div>
       <div style={{ marginTop: "20px" }}>
-        <button onClick={handleCropClick}>Crop Image</button>
+        <button class='modalButton' onClick={handleCropClick}>Crop Image</button>
       </div>
     </div>
   );
