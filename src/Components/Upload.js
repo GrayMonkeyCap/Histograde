@@ -26,7 +26,7 @@ const ImageUploader = () => {
   };
 
   const handleCropClick = () => {
-    const canvas = editor.getImageScaledToCanvas().toDataURL();
+    const canvas = editor.getImageScaledToCanvas();
   
       // Create a new FormData object
       const formData = new FormData();
@@ -41,7 +41,7 @@ const ImageUploader = () => {
       })
       .then(response => response.json())
       .then(data => {
-        setFeatures(data.features);
+        console.log(data);
       })
       .catch(error => console.error(error));
   };

@@ -34,4 +34,4 @@ def extract_features(file):
     # perform reinhard color normalization
     im_nmzd = htk.preprocessing.color_normalization.reinhard(array, mean_ref, std_ref)
 
-    cv2.imshow(im_nmzd)
+    print(im_nmzd)
