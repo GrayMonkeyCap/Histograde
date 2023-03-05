@@ -27,14 +27,14 @@ def predict():
         return 'Invalid file type', 400
     
     # Call the feature_predict function to extract features from the image
-    extract_features(file)
+    file_arr=extract_features(file)
     
     # Do something with the features, e.g. return them as JSON
-    return {'features': 'features'}
+    return {'features': file_arr.tolist()}
 
 
 # main driver function
 if __name__ == '__main__':
 	# run() method of Flask class runs the application
 	# on the local development server.
-	app.run()
+	app.run(debug=True)

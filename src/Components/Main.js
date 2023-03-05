@@ -11,8 +11,8 @@ const Main=()=>{
     return <div className='body'><div class="card">
         <UploadModal open={open} setIsOpen={setIsOpen}/>
     <div class="left">
-        <div class="head">Histopathology</div>
-        <div class="intro">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus aperiam voluptas ipsa maiores quasi dicta, excepturi dolorem placeat est, quisquam officia totam labore ab nam illo saepe? Mollitia, pariatur voluptas!</div>
+        <div class="head">Histo<span style={{color:'purple'}}>Grade</span></div>
+        <div class="intro">Revolutionizing Oral Cancer Diagnosis: Accurate Grade Detection using Histopathological Images and AI Assistance for Pathologists</div>
         <button class="upload press" onClick={openModal}>Upload Image</button>
     </div>
     <div class="image">
