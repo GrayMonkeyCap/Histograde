@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import AvatarEditor from "react-avatar-editor";
+import { useNavigate } from "react-router-dom";
 
 const ImageUploader = () => {
+  const navigate = useNavigate()
   const [image, setImage] = useState(null);
   const [editor, setEditor] = useState(null);
   const [scale, setScale] = useState(1);
@@ -24,26 +26,40 @@ const ImageUploader = () => {
   const handlePositionChange = (position) => {
     setPosition(position);
   };
-
+  function srcToFile(src, fileName, mimeType){
+    return (fetch(src)
+        .then(function(res){return res.arrayBuffer();})
+        .then(function(buf){return new File([buf], fileName, {type:mimeType});})
+    )
+}
   const handleCropClick = () => {
-    const canvas = editor.getImageScaledToCanvas();
-  
-      // Create a new FormData object
-      const formData = new FormData();
-  
-      // Append the file to the FormData object
-      formData.append('file', canvas);
-  
-      // Send the fetch request
-      fetch('/predict', {
-        method: 'POST',
-        body: formData
+    const canvas = editor.getImageScaledToCanvas().toDataURL();
+      console.log(canvas);
+      srcToFile(
+        canvas,
+        'hello',
+        canvas.slice(canvas.indexOf(":")+1,canvas.indexOf(";"))
+      )
+      .then(function(file){
+          console.log(file);
+          var fd = new FormData();
+          fd.append("file", file);
+          return fetch('/predict', {method:'POST', body:fd});
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
+      .then(function(res){
+          return res.json();
       })
-      .catch(error => console.error(error));
+      .then((data)=>{
+        console.log(data)
+        navigate('/result',
+        {state:{
+          'prediction':data.prediction,
+          'features':data.features,
+          'imageURL':canvas
+        }})
+      })
+      .catch(console.error)
+      ;
   };
 
   return (
