@@ -1,6 +1,7 @@
 # Importing flask module in the project is mandatory
 # An object of Flask class is our WSGI application.
 from flask import Flask, request
+import pickle
 from extract_features import extract_features
 # Flask constructor takes the name of
 # current module (__name__) as argument.
@@ -27,14 +28,28 @@ def predict():
         return 'Invalid file type', 400
     
     # Call the feature_predict function to extract features from the image
-    file_arr=extract_features(file)
+    features=extract_features(file)
     
+    loaded_model = pickle.load(open('model.sav', 'rb'))
+    result = loaded_model.predict([[
+        features['Mean Intensity'],
+        features['Mean Size'],
+        features['Cytoplasmic ratio'],
+        features['Lower'],
+        features['Mid'],
+        features['Upper'],
+        ]])
+    print(result[0])
+    labels = ["Mild", "Moderate", "Severe"]
     # Do something with the features, e.g. return them as JSON
-    return {'features': file_arr.tolist()}
+    return {
+        'prediction': labels[result[0]],
+        'features':features
+        }
 
 
 # main driver function
 if __name__ == '__main__':
 	# run() method of Flask class runs the application
 	# on the local development server.
-	app.run(debug=True)
+	app.run(host='0.0.0.0', debug=True, port=5000)

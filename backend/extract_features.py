@@ -88,7 +88,7 @@ def extract_features(file):
     min_nucleus_area = 60
 
     im_nuclei_seg_mask = htk.segmentation.label.area_open(
-        im_nuclei_seg_mask, min_nucleus_area).astype(np.int)
+        im_nuclei_seg_mask, min_nucleus_area).astype(np.int32)
 
     # compute nuclei properties
     objProps = skimage.measure.regionprops(im_nuclei_seg_mask,intensity_image=im_nuclei_stain)
@@ -131,7 +131,7 @@ def extract_features(file):
                 "height":      height,
             }
 
-            plt.plot(c[0], c[1], 'g+')
+            # plt.plot(c[0], c[1], 'g+')
             mrect = mpatches.Rectangle([c[0] - 0.5 * width, c[1] - 0.5 * height] ,
                                         width, height, fill=False, ec='g', linewidth=2)
             #computing cytoplasmic ratio
@@ -139,10 +139,10 @@ def extract_features(file):
             ratio=(objProps[i].filled_area)/(height*width)
             cell_ratio.append(ratio)
             
-            plt.gca().add_patch(mrect)
-            label = 'Cr',str(ratio)[:4]
-            plt.gca().annotate(label, ([c[0] + 0.5 * width, c[1] + 0.5 * height] ), color='w', fontsize=10,weight='bold' )
-            rects.append(mrect)
+            # plt.gca().add_patch(mrect)
+            # label = 'Cr',str(ratio)[:4]
+            # plt.gca().annotate(label, ([c[0] + 0.5 * width, c[1] + 0.5 * height] ), color='w', fontsize=10,weight='bold' )
+            # rects.append(mrect)
 
     lower_list.append(section_count[0])
     middle_list.append(section_count[1])
@@ -152,4 +152,11 @@ def extract_features(file):
     print(cell_ratio)
 
 
-    return 0
+    return {
+        'Mean Intensity':mean_int,
+        'Mean Size':mean_size,
+        'Cytoplasmic ratio':np.mean(cell_ratio),
+        'Lower':section_count[0],
+        'Mid':section_count[1],
+        'Upper':section_count[2]
+    }
